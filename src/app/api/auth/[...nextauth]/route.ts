@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth/next";
 import { JWT } from "next-auth/jwt";
 
-import { Backend_URL } from "@/lib/Constants";
+import { Backend_URL } from "../../../../lib/Constants";
 
 const refreshToken = async (token: JWT): Promise<JWT> => {
   const res = await fetch(Backend_URL + "/auth/refresh", {

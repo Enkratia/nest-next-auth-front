@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Login } from "@/components/Login";
+import { Login } from "../../components/Login";
 
 type SignInPageProps = {
   searchParams?: Record<"callbackUrl" | "error", string>;

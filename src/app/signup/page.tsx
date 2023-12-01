@@ -3,9 +3,9 @@
 import React from "react";
 import Link from "next/link";
 
-import InputBox from "@/components/InputBox";
-import { Button } from "@/components/Button";
-import { Backend_URL } from "@/lib/Constants";
+import InputBox from "../../components/InputBox";
+import { Button } from "../../components/Button";
+import { Backend_URL } from "../../lib/Constants";
 
 type FormInputsType = {
   name: string;
