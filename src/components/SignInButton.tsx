@@ -6,7 +6,6 @@ import Link from "next/link";
 
 export const SignInButton = () => {
   const { data: session } = useSession();
-  console.log(session);
 
   if (session && session.user) {
     return (
@@ -21,7 +20,7 @@ export const SignInButton = () => {
 
   return (
     <div className="flex gap-4 ml-auto items-center">
-      <Link href="/api/auth/signin" className="flex gap-4 ml-auto text-green-600">
+      <Link href="/signin" className="flex gap-4 ml-auto text-green-600">
         Sign In
       </Link>
 
