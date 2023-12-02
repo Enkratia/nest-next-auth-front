@@ -10,6 +10,10 @@ const AppBar = () => {
         Home Page
       </Link>
 
+      <Link className="transition-colors hover:text-blue-500" href={"/profile"}>
+        Profile
+      </Link>
+
       <Link className="transition-colors hover:text-blue-500" href={"/dashboard"}>
         DashBoard
       </Link>

@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Login } from "../../../components/Login";
-import { Modal } from "../../../components/Modal";
 
 import s from "./signin.module.css";
 
