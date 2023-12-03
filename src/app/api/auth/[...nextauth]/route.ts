@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect, redirect } from "next/navigation";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -6,6 +6,7 @@ import NextAuth from "next-auth/next";
 import { JWT } from "next-auth/jwt";
 
 import { Backend_URL } from "../../../../lib/Constants";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const refreshToken = async (token: JWT): Promise<JWT> => {
   const res = await fetch(Backend_URL + "/auth/refresh", {
@@ -15,10 +16,13 @@ const refreshToken = async (token: JWT): Promise<JWT> => {
     },
   });
 
-  console.log(res.status);
   if (!res.status.toString().startsWith("2")) {
-    // throw Error("Failed to refresh token");
-    redirect("/auth/signin/"); // Middleware не срабатывает, когда вкладка в браузере долго не использовалась. Разлогинивается, но все еще продолжает находиться на приватной странице.
+    throw Error("Failed to refresh token");
+    // console.log(typeof window);
+    // if (typeof window !== "undefined") {
+    //   window.location.reload();
+    // }
+    // redirect("/profile"); // Middleware не срабатывает, когда вкладка в браузере долго не использовалась. Разлогинивается, но все еще продолжает находиться на приватной странице.
   }
 
   const response = await res.json();
@@ -30,9 +34,6 @@ const refreshToken = async (token: JWT): Promise<JWT> => {
 };
 
 export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: "jwt",
-  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -93,23 +94,13 @@ export const authOptions: NextAuthOptions = {
 
       if (new Date().getTime() < token.backendTokens.expiresIn) return token;
 
-      // try {
       return await refreshToken(token);
-      // } catch {
-      //   redirect("/"); // Middleware не срабатывает, когда вкладка в браузере долго не использовалась. Разлогинивается, но все еще продолжает находиться на приватной странице.
-      // }
     },
     async session({ token, session }) {
-      // console.log(token);
-      if (token.statusCode) {
-        // console.log("SESSION", session);
-      } else {
-        session.user = token.user;
-        session.backendTokens = token.backendTokens;
-      }
+      session.user = token.user;
+      session.backendTokens = token.backendTokens;
 
-      // console.log("SESSION");
-
+      // console.log(session);
       return session;
     },
 
@@ -120,17 +111,33 @@ export const authOptions: NextAuthOptions = {
     //   session.user.role = token.role;
     //   return session;
     // },
+
+    // redirect({ url, baseUrl }) {
+    //   console.log("URLS: ", url, baseUrl, Date.now());
+    //   // async redirect() {
+    //   // // Allows relative callback URLs
+    //   // if (url.startsWith("/")) return `${baseUrl}${url}`
+    //   // // Allows callback URLs on the same origin
+    //   // else if (new URL(url).origin === baseUrl) return url
+    //   return baseUrl;
+    // },
   },
 
-  // events: {
-  //   signOut() {
-  //     console.log("SIGNOUT");
-  //     redirect("/"); // Middleware не срабатывает, когда вкладка в браузере долго не использовалась. Разлогинивается, но все еще продолжает находиться на приватной странице.
-  //   },
-  // },
+  events: {
+    signOut() {
+      permanentRedirect("/hello");
+      // console.log("SIGNOUT");
+      // (function () {
+      //   "use client";
+      //   // console.log(redirect);
+      //   redirect("/home"); // Middleware не срабатывает, когда вкладка в браузере долго не использовалась. Разлогинивается, но все еще продолжает находиться на приватной странице.
+      // })();
+    },
+  },
 
   pages: {
     signIn: "/signin",
+    error: "/error",
   },
 };
 

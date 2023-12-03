@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 
 import InputBox from "./InputBox";
 import { Button } from "./Button";
+import { permanentRedirect, redirect, useRouter } from "next/navigation";
 
 type LoginProps = {
   className: string;
@@ -14,17 +15,25 @@ type LoginProps = {
 };
 
 export const Login: React.FC<LoginProps> = ({ className, callbackUrl, error }) => {
+  const router = useRouter();
   const email = React.useRef("");
   const pass = React.useRef("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signIn("credentials", {
+    const data = await signIn("credentials", {
       email: email.current,
       password: pass.current,
-      redirect: true,
+      redirect: false,
       callbackUrl: callbackUrl ?? "http://localhost:3000",
     });
+
+    // console.log(data?.url as string);
+    // router.push(data?.url as string);
+    // redirect(data?.url as string);
+    // console.log("PUSH");
+    console.log(data?.url);
+    router.push("/hello");
   };
 
   return (
