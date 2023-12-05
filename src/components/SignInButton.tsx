@@ -1,13 +1,21 @@
 "use client";
 
+import qs from "qs";
+
 import React from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { FRONTEND_URL } from "@/lib/Constants";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 export const SignInButton = () => {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
-  const onSignout = (e) => {
+  const sP = useSearchParams().toString();
+  const searchParams = sP ? "?" + sP : "";
+
+  const onSignout = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     signOut({
       redirect: false,
@@ -30,7 +38,9 @@ export const SignInButton = () => {
 
   return (
     <div className="flex gap-4 ml-auto items-center">
-      <Link href="/signin" className="flex gap-4 ml-auto text-green-600">
+      <Link
+        href={`/signin?callbackUrl=${FRONTEND_URL}${pathname}${searchParams}`}
+        className="flex gap-4 ml-auto text-green-600">
         Sign In
       </Link>
 

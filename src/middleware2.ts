@@ -1,57 +1,73 @@
-// import { withAuth } from "next-auth/middleware";
-// import { NextRequest, NextResponse } from "next/server";
-// export { default } from "next-auth/middleware";
+// import { NextResponse } from "next/server";
+// import type { NextRequest } from "next/server";
 
-import withAuth from "next-auth/middleware";
+// import { revalidatePath } from "next/cache";
+// import withAuth from "next-auth/middleware";
+// This function can be marked `async` if using `await` inside
+// export default withAuth(
+//   function middleware(req) {
+//     console.log("URL: ", req.url);
 
-// export default withAuth({
-//   callbacks: {
-//     authorized: async ({ req, token }) => {
-//       const expiresInRefresh = token?.backendTokens.refreshExpiresIn;
-//       const timeNow = Date.now();
+//     const requestHeaders = new Headers(req.headers);
+//     requestHeaders.set("x-middleware-cache", "no-cache");
+//     requestHeaders.set("cache-control", "no-store");
 
-//       if (expiresInRefresh && timeNow > expiresInRefresh) {
-//         return false;
-//       }
+//     console.log("MIDDLEWARE");
+//     return NextResponse.next({
+//       request: {
+//         headers: requestHeaders,
+//       },
+//     });
+//   },
+//   {
+//     callbacks: {
+//       authorized: async ({ req, token }) => {
+//         const expiresInRefresh = token?.backendTokens.refreshExpiresIn;
+//         const timeNow = Date.now();
 
-//       return !!token;
+//         console.log("AUTHORIZE", Date.now());
+
+//         if (expiresInRefresh && timeNow > expiresInRefresh) {
+//           // console.log("FALSE");
+//           return false;
+//         }
+
+//         // console.log("TOKEN: ", !!token);
+//         return !!token;
+//       },
 //     },
 //   },
-// });
+// );
 
 // import { NextResponse } from "next/server";
 // import type { NextRequest } from "next/server";
 
-// // This function can be marked `async` if using `await` inside
+// This function can be marked `async` if using `await` inside
 // export function middleware(request: NextRequest) {
-//   // return NextResponse.redirect(new URL('/home', request.url))
+//   console.log("URL: ", request.url);
+
+//   const requestHeaders = new Headers(request.headers);
+//   requestHeaders.set("x-middleware-cache", "no-cache");
+//   requestHeaders.set("cache-control", "no-store");
+
 //   console.log("MIDDLEWARE");
+//   return NextResponse.next({
+//     request: {
+//       headers: requestHeaders,
+//     },
+//   });
 // }
 
-// export default withAuth({
-//   function middleware(req) {
-//     console.log(req.nextauth.token)
-//   },
-//   {
+// See "Matching Paths" below to learn more
+// export const config = {
+//   matcher: ["/dashboard:path*", "/profile"],
+// };
 
+// export function middleware(request: NextRequest) {
+//   if (request.nextUrl.pathname === "/") {
+//     const redirectUrl = Math.random() > 0.5 ? "/dashboard" : "/profile";
+//     const response = NextResponse.redirect(new URL(redirectUrl, request.url));
+//     response.headers.set("x-middleware-cache", "no-cache"); // Disables middleware caching
+//     return response;
 //   }
-// });
-
-export default withAuth({
-  callbacks: {
-    authorized: async ({ req, token }) => {
-      const expiresInRefresh = token?.backendTokens.refreshExpiresIn;
-      const timeNow = Date.now();
-
-      if (expiresInRefresh && timeNow > expiresInRefresh) {
-        return false;
-      }
-
-      return !!token;
-    },
-  },
-});
-
-export const config = {
-  matcher: ["/dashboard:path*", "/profile:path*"],
-};
+// }

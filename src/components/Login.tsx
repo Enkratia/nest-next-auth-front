@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 
 import InputBox from "./InputBox";
 import { Button } from "./Button";
-import { permanentRedirect, redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type LoginProps = {
   className: string;
@@ -28,12 +28,7 @@ export const Login: React.FC<LoginProps> = ({ className, callbackUrl, error }) =
       callbackUrl: callbackUrl ?? "http://localhost:3000",
     });
 
-    // console.log(data?.url as string);
-    // router.push(data?.url as string);
-    // redirect(data?.url as string);
-    // console.log("PUSH");
-    console.log(data?.url);
-    router.push("/hello");
+    router.push(data?.url as string);
   };
 
   return (

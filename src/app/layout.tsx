@@ -4,7 +4,7 @@ import Providers from "../components/Providers";
 
 import "./globals.css";
 import AppBar from "../components/AppBar";
-import { Session } from "next-auth";
+import { RouteProtector } from "@/components/RouteProtector";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,17 +13,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  session,
   modal,
 }: {
   children: React.ReactNode;
   modal: React.ReactNode;
-  session: Session;
 }) {
   return (
     <html lang="en">
       <body>
-        <Providers session={session}>
+        <Providers>
+          <RouteProtector />
           <AppBar />
           {children}
           {modal}
